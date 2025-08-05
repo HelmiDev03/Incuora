@@ -45,11 +45,23 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
     }
   }, [])
 
+  // Track if we're on a mobile device
+  const [isMobileDevice, setIsMobileDevice] = useState(false)
+  
+  // Check if we're on a mobile device on component mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobileDevice(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    }
+    checkMobile()
+  }, [])
+
   // Animation function for the infinite scroll
   const animate = useCallback(
     (time: DOMHighResTimeStamp) => {
-      if (!contentRef.current || singleSetWidth === 0 || isHovered) {
-        // Pause if hovered
+      // On mobile, always animate regardless of hover state
+      if (!contentRef.current || singleSetWidth === 0 || (isHovered && !isMobileDevice)) {
+        // Pause if hovered on desktop only
         lastTimeRef.current = time // Update lastTimeRef even when paused to prevent jump on resume
         animationFrameRef.current = null // Clear animation frame if paused
         return
@@ -71,18 +83,20 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
 
       animationFrameRef.current = requestAnimationFrame(animate)
     },
-    [durationSeconds, singleSetWidth, isHovered],
+    [durationSeconds, singleSetWidth, isHovered, isMobileDevice],
   )
 
   useEffect(() => {
-    if (singleSetWidth > 0 && !isHovered) {
-      // Only start if not hovered
+    // On mobile, always animate regardless of hover state
+    if (singleSetWidth > 0 && (!isHovered || isMobileDevice)) {
+      // Only start if not hovered (or on mobile)
       if (animationFrameRef.current === null) {
         // Prevent multiple animation frames
         lastTimeRef.current = performance.now() // Reset lastTimeRef to current time on resume
         animationFrameRef.current = requestAnimationFrame(animate)
       }
-    } else if (isHovered && animationFrameRef.current) {
+    } else if (isHovered && !isMobileDevice && animationFrameRef.current) {
+      // Only pause on desktop
       cancelAnimationFrame(animationFrameRef.current)
       animationFrameRef.current = null
     }
@@ -92,7 +106,7 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [animate, singleSetWidth, isHovered])
+  }, [animate, singleSetWidth, isHovered, isMobileDevice])
 
   // Custom component for logo with no click functionality
   const LogoWithSecret = ({ logo, keyPrefix }: { logo: Logo, keyPrefix: string }) => {
@@ -103,6 +117,18 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
       <div
         key={key}
         className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] flex items-center justify-center"
+        onClick={(e) => {
+          // Prevent click from stopping animation
+          e.stopPropagation();
+        }}
+        onTouchStart={(e) => {
+          // Prevent touch from stopping animation
+          e.stopPropagation();
+        }}
+        onTouchEnd={(e) => {
+          // Prevent touch end from stopping animation
+          e.stopPropagation();
+        }}
       >
         {/* Div with right-click prevention */}
         <div 
@@ -121,6 +147,9 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
             height={80}
             className="object-contain md:w-[120px] md:h-[120px]"
             onContextMenu={(e) => e.preventDefault()}
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
             draggable="false" // Prevent dragging the image
           />
         </div>
@@ -135,8 +164,6 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
       style={{ filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onTouchStart={() => setIsHovered(true)}
-      onTouchEnd={() => setIsHovered(false)}
     >
       <div
         ref={contentRef}
