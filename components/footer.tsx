@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { FaFacebookF, FaLinkedinIn, FaYoutube, FaInstagram } from "react-icons/fa"
+import { FaLinkedinIn } from "react-icons/fa"
 
 export default function Footer() {
   return (
@@ -33,17 +33,7 @@ export default function Footer() {
             through strategy, technology, <br />
             and network.
           </p>
-          <div className="flex gap-4 ml-0">
-            {" "}
-            {/* Ensure no left margin on the social icons container */}
-            {/* Facebook Icon */}
-            <Link
-              href="#"
-              aria-label="Facebook"
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-[#FF751F]"
-            >
-              <FaFacebookF className="w-5 h-5 text-white" />
-            </Link>
+          <div className="flex ml-0">
             {/* LinkedIn Icon */}
             <Link
               href="#"
@@ -51,14 +41,6 @@ export default function Footer() {
               className="w-8 h-8 flex items-center justify-center rounded-md bg-[#FF751F]"
             >
               <FaLinkedinIn className="w-5 h-5 text-white" />
-            </Link>
-            {/* YouTube Icon - Removed box */}
-            <Link href="#" aria-label="YouTube" className="flex items-center justify-center">
-              <FaYoutube className="w-8 h-8 text-[#FF751F]" /> {/* Set icon size and color directly */}
-            </Link>
-            {/* Instagram Icon - Removed box */}
-            <Link href="#" aria-label="Instagram" className="flex items-center justify-center">
-              <FaInstagram className="w-8 h-8 text-[#FF751F]" /> {/* Set icon size and color directly */}
             </Link>
           </div>
         </div>
