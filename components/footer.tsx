@@ -10,11 +10,11 @@ export default function Footer() {
         {/* Shift the entire left block up and ensure items start at the very left */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-auto lg:max-w-[250px] mt-[-20px]">
           <Image
-            src="/incuora-logo.png"
+            src="/newlogo.svg"
             alt="Incuora"
-            width={164}
-            height={88}
-            className="object-contain mb-2 -ml-1" // Adjusted negative left margin for fine-tuning
+            width={200}
+            height={107}
+            className="object-contain mb-0 -ml-1" // Removed bottom margin
           />
           <p className="font-lato font-semibold text-[13px] leading-relaxed tracking-[-0.02em] text-black mb-6 -ml-1">
             {" "}
@@ -36,7 +36,9 @@ export default function Footer() {
           <div className="flex ml-0">
             {/* LinkedIn Icon */}
             <Link
-              href="#"
+              href="https://www.linkedin.com/company/incuora/about/"
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="LinkedIn"
               className="w-8 h-8 flex items-center justify-center rounded-md bg-[#FF751F]"
             >
