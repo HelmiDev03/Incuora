@@ -51,21 +51,31 @@ export default function Navbar() {
     <nav className="absolute top-0 left-0 right-0 h-[120px] bg-white z-20 shadow-sm">
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
         {/* Logo (Desktop) */}
-        <div className="hidden md:flex items-center">
+        <div className="hidden md:flex items-center h-full">
           <Link href="/" className="flex items-center">
-            <Image 
-              src="/newlogo.svg" 
-              alt="Incuora" 
-              width={150} 
-              height={75} 
-              className="object-contain mt-1" 
-            />
+            <div className="flex items-center justify-center h-[120px]">
+              <Image 
+                src="/newlogo.svg" 
+                alt="Incuora" 
+                width={220} 
+                height={110} 
+                className="object-contain" 
+              />
+            </div>
           </Link>
         </div>
-        {/* Logo (Mobile - responsive size) */}
-        <div className="md:hidden">
-          <Link href="/">
-            <Image src="/newlogo.svg" alt="Incuora" width={140} height={75} className="object-contain" />
+        {/* Logo (Mobile - same as desktop) */}
+        <div className="md:hidden flex items-center h-full">
+          <Link href="/" className="flex items-center">
+            <div className="flex items-center justify-center h-[120px]">
+              <Image 
+                src="/newlogo.svg" 
+                alt="Incuora" 
+                width={180} 
+                height={90} 
+                className="object-contain" 
+              />
+            </div>
           </Link>
         </div>
 

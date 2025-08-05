@@ -12,8 +12,8 @@ export default function Footer() {
           <Image
             src="/newlogo.svg"
             alt="Incuora"
-            width={200}
-            height={107}
+            width={300}
+            height={160}
             className="object-contain mb-0 -ml-1" // Removed bottom margin
           />
           <p className="font-lato font-semibold text-[13px] leading-relaxed tracking-[-0.02em] text-black mb-6 -ml-1">
