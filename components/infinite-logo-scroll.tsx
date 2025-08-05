@@ -45,23 +45,37 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
     }
   }, [])
 
-  // Track if we're on a mobile device
-  const [isMobileDevice, setIsMobileDevice] = useState(false)
+  // Track if we're on a small screen (≤660px)
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
   
-  // Check if we're on a mobile device on component mount
+  // Check if we're on a small screen on component mount and on resize
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobileDevice(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth <= 660)
     }
-    checkMobile()
+    
+    // Initial check
+    checkScreenSize()
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkScreenSize)
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkScreenSize)
   }, [])
 
   // Animation function for the infinite scroll
   const animate = useCallback(
     (time: DOMHighResTimeStamp) => {
-      // On mobile, always animate regardless of hover state
-      if (!contentRef.current || singleSetWidth === 0 || (isHovered && !isMobileDevice)) {
-        // Pause if hovered on desktop only
+      // Only check if we can animate
+      if (!contentRef.current || singleSetWidth === 0) {
+        lastTimeRef.current = time // Update lastTimeRef even when paused to prevent jump on resume
+        animationFrameRef.current = null // Clear animation frame if paused
+        return
+      }
+      
+      // On larger screens (>660px), pause animation when hovered
+      if (isHovered && !isSmallScreen) {
         lastTimeRef.current = time // Update lastTimeRef even when paused to prevent jump on resume
         animationFrameRef.current = null // Clear animation frame if paused
         return
@@ -83,20 +97,20 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
 
       animationFrameRef.current = requestAnimationFrame(animate)
     },
-    [durationSeconds, singleSetWidth, isHovered, isMobileDevice],
+    [durationSeconds, singleSetWidth, isHovered, isSmallScreen],
   )
 
   useEffect(() => {
-    // On mobile, always animate regardless of hover state
-    if (singleSetWidth > 0 && (!isHovered || isMobileDevice)) {
-      // Only start if not hovered (or on mobile)
+    // Always animate on small screens, or when not hovered on larger screens
+    if (singleSetWidth > 0 && (isSmallScreen || !isHovered)) {
+      // Start animation if not already running
       if (animationFrameRef.current === null) {
         // Prevent multiple animation frames
         lastTimeRef.current = performance.now() // Reset lastTimeRef to current time on resume
         animationFrameRef.current = requestAnimationFrame(animate)
       }
-    } else if (isHovered && !isMobileDevice && animationFrameRef.current) {
-      // Only pause on desktop
+    } else if (isHovered && !isSmallScreen && animationFrameRef.current) {
+      // Only pause on larger screens when hovered
       cancelAnimationFrame(animationFrameRef.current)
       animationFrameRef.current = null
     }
@@ -106,7 +120,7 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [animate, singleSetWidth, isHovered, isMobileDevice])
+  }, [animate, singleSetWidth, isHovered, isSmallScreen])
 
   // Custom component for logo with no click functionality
   const LogoWithSecret = ({ logo, keyPrefix }: { logo: Logo, keyPrefix: string }) => {
@@ -162,8 +176,18 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
       ref={containerRef}
       className="flex-shrink-0 w-full lg:w-[949px] h-[120px] md:h-[168px] overflow-hidden flex items-center justify-center"
       style={{ filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))" }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => {
+        // Only set hover state on larger screens
+        if (!isSmallScreen) {
+          setIsHovered(true)
+        }
+      }}
+      onMouseLeave={() => {
+        // Only set hover state on larger screens
+        if (!isSmallScreen) {
+          setIsHovered(false)
+        }
+      }}
     >
       <div
         ref={contentRef}
