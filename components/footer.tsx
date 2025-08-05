@@ -10,7 +10,7 @@ export default function Footer() {
         {/* Shift the entire left block up and ensure items start at the very left */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-auto lg:max-w-[250px] mt-[-20px]">
           <Image
-            src="/newlogo.svg"
+            src="/finallogo.svg"
             alt="Incuora"
             width={300}
             height={160}

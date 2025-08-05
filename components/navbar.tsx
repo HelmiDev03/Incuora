@@ -55,7 +55,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center">
             <div className="flex items-center justify-center h-[120px]">
               <Image 
-                src="/newlogo.svg" 
+                src="/finallogo.svg" 
                 alt="Incuora" 
                 width={220} 
                 height={110} 
@@ -69,7 +69,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center">
             <div className="flex items-center justify-center h-[120px]">
               <Image 
-                src="/newlogo.svg" 
+                src="/finallogo.svg" 
                 alt="Incuora" 
                 width={180} 
                 height={90} 
