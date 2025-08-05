@@ -23,7 +23,7 @@ export default function ContactSection({ id }: ContactSectionProps) {
 
     const formData = new FormData(form)
 
-    const res = await fetch("https://formsubmit.co/ajax/contact@incuora.com", {
+    const res = await fetch("https://formsubmit.co/ajax/1ebc37cc7a78cedc79e42f63641b28eb", {
       method: "POST",
       headers: {
         Accept: "application/json"
