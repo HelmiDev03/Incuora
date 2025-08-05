@@ -67,17 +67,18 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
   // Animation function for the infinite scroll
   const animate = useCallback(
     (time: DOMHighResTimeStamp) => {
-      // Only check if we can animate
+      // Check if we can animate
       if (!contentRef.current || singleSetWidth === 0) {
-        lastTimeRef.current = time // Update lastTimeRef even when paused to prevent jump on resume
-        animationFrameRef.current = null // Clear animation frame if paused
+        lastTimeRef.current = time
+        animationFrameRef.current = null
         return
       }
       
       // On larger screens (>660px), pause animation when hovered
+      // On small screens (≤660px), always continue animation regardless of hover
       if (isHovered && !isSmallScreen) {
-        lastTimeRef.current = time // Update lastTimeRef even when paused to prevent jump on resume
-        animationFrameRef.current = null // Clear animation frame if paused
+        lastTimeRef.current = time
+        animationFrameRef.current = null
         return
       }
 
@@ -101,12 +102,12 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
   )
 
   useEffect(() => {
-    // Always animate on small screens, or when not hovered on larger screens
+    // Start animation if not already running and if:
+    // 1. We're on a small screen (≤660px) - always animate regardless of hover
+    // 2. OR we're on a larger screen and not hovering
     if (singleSetWidth > 0 && (isSmallScreen || !isHovered)) {
-      // Start animation if not already running
       if (animationFrameRef.current === null) {
-        // Prevent multiple animation frames
-        lastTimeRef.current = performance.now() // Reset lastTimeRef to current time on resume
+        lastTimeRef.current = performance.now()
         animationFrameRef.current = requestAnimationFrame(animate)
       }
     } else if (isHovered && !isSmallScreen && animationFrameRef.current) {
