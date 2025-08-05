@@ -2,15 +2,17 @@
 
 import { useRef, useEffect, useState, useCallback } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
+// Define the logos with their secret images
 const logos = [
-  { src: "/finalto-logo.png", alt: "Finalto" },
-  { src: "/gfsc-logo.png", alt: "GFSC" },
-  { src: "/ftt-logo.png", alt: "FTT" },
-  { src: "/scope-logo.png", alt: "Scope" },
-  { src: "/sumsub-logo.png", alt: "Sumsub" },
-  { src: "/b2prime-logo.png", alt: "B2Prime" },
-  { src: "/swiset-logo.png", alt: "Swiset" },
+  { src: "/finalto-logo.png", alt: "Finalto", secretSrc: "/solutions/compliance-illustration.png" },
+  { src: "/gfsc-logo.png", alt: "GFSC", secretSrc: "/solutions/finance-license.png" },
+  { src: "/ftt-logo.png", alt: "FTT", secretSrc: "/solutions/infrastructure-illustration.png" },
+  { src: "/scope-logo.png", alt: "Scope", secretSrc: "/solutions/strategy-illustration.png" },
+  { src: "/sumsub-logo.png", alt: "Sumsub", secretSrc: "/solutions/tech-illustration.png" },
+  { src: "/b2prime-logo.png", alt: "B2Prime", secretSrc: "/about-illustration.png" },
+  { src: "/swiset-logo.png", alt: "Swiset", secretSrc: "/tech-illustration.png" },
 ]
 
 interface InfiniteLogoScrollProps {
@@ -18,7 +20,14 @@ interface InfiniteLogoScrollProps {
   blurPx?: number // Blur amount in pixels
 }
 
+interface Logo {
+  src: string
+  alt: string
+  secretSrc: string
+}
+
 export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: InfiniteLogoScrollProps) {
+  const router = useRouter()
   const containerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const firstSetRef = useRef<HTMLDivElement>(null)
@@ -26,7 +35,7 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
   const [singleSetWidth, setSingleSetWidth] = useState(0)
   const animationFrameRef = useRef<number | null>(null)
   const lastTimeRef = useRef<DOMHighResTimeStamp>(0)
-  const [isHovered, setIsHovered] = useState(false) // New state for hover
+  const [isHovered, setIsHovered] = useState(false) // State for hover
 
   // Measure the width of the first set of logos once it's rendered
   useEffect(() => {
@@ -36,6 +45,7 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
     }
   }, [])
 
+  // Animation function for the infinite scroll
   const animate = useCallback(
     (time: DOMHighResTimeStamp) => {
       if (!contentRef.current || singleSetWidth === 0 || isHovered) {
@@ -61,7 +71,7 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
 
       animationFrameRef.current = requestAnimationFrame(animate)
     },
-    [durationSeconds, singleSetWidth, isHovered], // Add isHovered to dependencies
+    [durationSeconds, singleSetWidth, isHovered],
   )
 
   useEffect(() => {
@@ -82,15 +92,49 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [animate, singleSetWidth, isHovered]) // Re-run effect if animate, singleSetWidth, or isHovered changes
+  }, [animate, singleSetWidth, isHovered])
+
+  // Custom component for logo with no click functionality
+  const LogoWithSecret = ({ logo, keyPrefix }: { logo: Logo, keyPrefix: string }) => {
+    // Create a unique key for each logo
+    const key = `${keyPrefix}-${logo.alt}`
+    
+    return (
+      <div
+        key={key}
+        className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] flex items-center justify-center"
+      >
+        {/* Div with right-click prevention */}
+        <div 
+          className="relative"
+          onContextMenu={(e) => {
+            // Prevent the default context menu (right-click menu)
+            e.preventDefault()
+            return false
+          }}
+        >
+          {/* Visible logo image with right-click disabled */}
+          <Image
+            src={logo.src}
+            alt={logo.alt}
+            width={80}
+            height={80}
+            className="object-contain md:w-[120px] md:h-[120px]"
+            onContextMenu={(e) => e.preventDefault()}
+            draggable="false" // Prevent dragging the image
+          />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
       ref={containerRef}
       className="flex-shrink-0 w-full lg:w-[949px] h-[120px] md:h-[168px] overflow-hidden flex items-center justify-center"
       style={{ filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))" }}
-      onMouseEnter={() => setIsHovered(true)} // Set hovered state on mouse enter
-      onMouseLeave={() => setIsHovered(false)} // Clear hovered state on mouse leave
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         ref={contentRef}
@@ -105,38 +149,37 @@ export default function InfiniteLogoScroll({ durationSeconds = 3, blurPx = 2 }: 
         {/* First set of logos */}
         <div ref={firstSetRef} className="flex gap-4 md:gap-8">
           {logos.map((logo, index) => (
-            <div
-              key={`first-${index}`}
-              className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] flex items-center justify-center"
-            >
-              <Image
-                src={logo.src || "/placeholder.svg"}
-                alt={logo.alt}
-                width={80}
-                height={80}
-                className="object-contain md:w-[120px] md:h-[120px]"
-              />
-            </div>
+            <LogoWithSecret key={`first-${index}`} logo={logo} keyPrefix={`first-${index}`} />
           ))}
         </div>
+        
         {/* Duplicate set for seamless loop */}
         <div className="flex gap-4 md:gap-8">
           {logos.map((logo, index) => (
-            <div
-              key={`second-${index}`}
-              className="w-[80px] h-[80px] md:w-[140px] md:h-[140px] flex items-center justify-center"
-            >
-              <Image
-                src={logo.src || "/placeholder.svg"}
-                alt={logo.alt}
-                width={80}
-                height={80}
-                className="object-contain md:w-[120px] md:h-[120px]"
-              />
-            </div>
+            <LogoWithSecret key={`second-${index}`} logo={logo} keyPrefix={`second-${index}`} />
           ))}
         </div>
       </div>
+      
+      {/* Script to disable right-click on all logo images */}
+      <script dangerouslySetInnerHTML={{ __html: `
+        document.addEventListener('DOMContentLoaded', function() {
+          // Disable right-click on all images in the logo section
+          const logoImages = document.querySelectorAll('.flex-shrink-0 img');
+          logoImages.forEach(img => {
+            img.addEventListener('contextmenu', function(e) {
+              e.preventDefault();
+              return false;
+            });
+            
+            // Also prevent dragging images
+            img.addEventListener('dragstart', function(e) {
+              e.preventDefault();
+              return false;
+            });
+          });
+        });
+      `}} />
     </div>
   )
 }
