@@ -52,8 +52,14 @@ export default function Navbar() {
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
         {/* Logo (Desktop) */}
         <div className="hidden md:flex items-center">
-          <Link href="/">
-            <Image src="/newlogo.svg" alt="Incuora" width={160} height={80} className="object-contain" />
+          <Link href="/" className="flex items-center">
+            <Image 
+              src="/newlogo.svg" 
+              alt="Incuora" 
+              width={150} 
+              height={75} 
+              className="object-contain mt-1" 
+            />
           </Link>
         </div>
         {/* Logo (Mobile - responsive size) */}
@@ -64,7 +70,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Navigation Items */}
-        <div className="hidden md:flex items-center gap-12">
+        <div className="hidden md:flex items-center gap-12 h-[120px]">
           <Link href="/" className={getLinkClass("/")}>
             Home
           </Link>
