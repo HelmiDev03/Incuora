@@ -7,18 +7,17 @@ export default function Footer() {
     <footer className="w-full bg-white py-10 md:py-16 lg:py-20">
       <div className="container mx-auto px-4 flex flex-col lg:flex-row justify-between items-center lg:items-start gap-10 lg:gap-20">
         {/* Left Section: Logo, Tagline, Social Icons */}
-        {/* Shift the entire left block up and ensure items start at the very left */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-auto lg:max-w-[250px] mt-[-20px]">
-          <Image
-            src="/finallogo.svg"
-            alt="Incuora"
-            width={300}
-            height={160}
-            className="object-contain mb-0 -ml-1" // Removed bottom margin
-          />
-          <p className="font-lato font-semibold text-[13px] leading-relaxed tracking-[-0.02em] text-black mb-6 -ml-1">
-            {" "}
-            {/* Adjusted negative left margin for fine-tuning */}
+        <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-auto lg:max-w-[250px]">
+          <div className="lg:pl-0 lg:transform lg:-translate-x-[20%]"> {/* Container with negative X translation */}
+            <Image
+              src="/footerloooogo.svg"
+              alt="Incuora"
+              width={300}
+              height={160}
+              className="object-contain mb-0"
+            />
+          </div>
+          <p className="font-lato font-semibold text-[13px] leading-relaxed tracking-[-0.02em] text-black mb-6 lg:pl-0">
             We scale{" "}
             <span
               className="text-orange-500 underline decoration-orange-500 decoration-solid"
@@ -33,7 +32,7 @@ export default function Footer() {
             through strategy, technology, <br />
             and network.
           </p>
-          <div className="flex ml-0">
+          <div className="flex lg:pl-0"> {/* Ensure LinkedIn icon aligns with logo and text */}
             {/* LinkedIn Icon */}
             <Link
               href="https://www.linkedin.com/company/incuora/about/"
