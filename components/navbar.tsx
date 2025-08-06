@@ -51,36 +51,32 @@ export default function Navbar() {
     <nav className="absolute top-0 left-0 right-0 h-[120px] bg-white z-20 shadow-sm">
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
         {/* Logo (Desktop) */}
-        <div className="hidden md:flex items-center h-full">
+        <div className="hidden md:flex items-center">
           <Link href="/" className="flex items-center">
-            <div className="flex items-center justify-center h-[120px]">
-              <Image 
-                src="/finallogo.svg" 
-                alt="Incuora" 
-                width={220} 
-                height={110} 
-                className="object-contain" 
-              />
-            </div>
+            <Image 
+              src="/navlogocapital.svg" 
+              alt="Incuora" 
+              width={240} 
+              height={120} 
+              className="object-contain" 
+            />
           </Link>
         </div>
         {/* Logo (Mobile - same as desktop) */}
-        <div className="md:hidden flex items-center h-full">
+        <div className="md:hidden flex items-center">
           <Link href="/" className="flex items-center">
-            <div className="flex items-center justify-center h-[120px]">
-              <Image 
-                src="/finallogo.svg" 
-                alt="Incuora" 
-                width={180} 
-                height={90} 
-                className="object-contain" 
-              />
-            </div>
+            <Image 
+              src="/navlogocapital.svg" 
+              alt="Incuora" 
+              width={195} 
+              height={97} 
+              className="object-contain" 
+            />
           </Link>
         </div>
 
         {/* Desktop Navigation Items */}
-        <div className="hidden md:flex items-center gap-12 h-[120px]">
+        <div className="hidden md:flex items-center gap-12">
           <Link href="/" className={getLinkClass("/")}>
             Home
           </Link>

@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full lg:w-auto lg:max-w-[250px]">
           <div className="lg:pl-0 lg:transform lg:-translate-x-[20%]"> {/* Container with negative X translation */}
             <Image
-              src="/footerloooogo.svg"
+              src="/footercapital.svg"
               alt="Incuora"
               width={300}
               height={160}
